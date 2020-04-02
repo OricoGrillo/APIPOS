@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Aplicacion;
+using Aplicacion.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +13,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Persistencia;
+using Persistencia.Interfaces;
 
 namespace API
 {
@@ -36,6 +40,11 @@ namespace API
                 var connection = Configuration.GetConnectionString("DefaultConnection");
                 opciones.UseSqlite(connection); 
             });
+
+            // Se habilita la inyección de dependencias para cada vez se llame el CategoriasController se cree la instancia a ICategoriaService.
+            services.AddScoped<ICategoriaService,CategoriaService>();
+            // Se habilita la inyección de dependencias para cada vez se llame el CategoriaService se cree la instancia a IData.
+            services.AddScoped<IData,SqlData>();
             
             services.AddControllers();
         }

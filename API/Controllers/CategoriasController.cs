@@ -2,23 +2,24 @@ using System.Collections.Generic;
 using System.Linq;
 using Dominio;
 using Microsoft.AspNetCore.Mvc;
+using Aplicacion.Interfaces;
 
 namespace API.Controllers
 {
     public class CategoriasController : Controller
     {
-        private readonly DataContext _data;
+        private readonly ICategoriaService _service;
 
-        public CategoriasController(DataContext data)
+        public CategoriasController(ICategoriaService service)
         {
-            this._data = data;
+            this._service = service;
         }
 
         [HttpGet]
         [Route("api/[controller]")]
         public ActionResult<IEnumerable<Categoria>> GetCategorias()
         {
-            var Categorias = _data.Categorias.ToList();
+            var Categorias = _service.List();
             return Ok(Categorias);
         }
 
@@ -26,7 +27,7 @@ namespace API.Controllers
         [Route("api/[controller]/{id}")]
         public ActionResult<Categoria> GetCategoria(int id)
         {
-            var Categoria = _data.Categorias.ToList().Find(x => x.Id == id);
+            var Categoria = _service.GetById(id);
             
             if(Categoria != null)
             {
@@ -40,18 +41,16 @@ namespace API.Controllers
         [Route("api/[controller]")]
         public ActionResult CrearCategoria([FromBody] Categoria Categoria)
         {
-            _data.Categorias.Add(Categoria);
-            _data.SaveChanges();
-            return Ok();        
+            Categoria = _service.Create(Categoria);
+            return Ok(Categoria);        
         }
 
         [HttpPut]
         [Route("api/[controller]/{id}")]
         public ActionResult UpdateCategoria([FromBody] Categoria Categoria, int id)
         {
-            _data.Categorias.Update(Categoria);
-            _data.SaveChanges();
-            return Ok();        
+            Categoria = _service.Update(Categoria);
+            return Ok(Categoria);        
         }
 
         [HttpDelete]
@@ -59,8 +58,8 @@ namespace API.Controllers
         public ActionResult DeleteCategoria(int id)
         {
             var Categoria = new Categoria { Id = id };
-            _data.Categorias.Remove(Categoria);
-            _data.SaveChanges();
+            _service.Delete(id);
+
             return Ok();        
         }
     }

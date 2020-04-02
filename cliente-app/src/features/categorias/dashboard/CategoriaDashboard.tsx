@@ -11,10 +11,6 @@ const CategoriaDashboard:React.FC<IProps> = (props:IProps) => {
     return (
         <div>
             <Header size='large'>Categorías de Productos</Header>
-            
-            {/* <Header size='tiny'>Buscar</Header> */}
-
-            {/* <Input size='large' placeholder='Nombre Categoría' /> */}
 
             <Form>
                 <Form.Field>

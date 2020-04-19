@@ -1,39 +1,37 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect, useContext} from 'react';
 import CategoriaDashboard from '../../features/categorias/dashboard/CategoriaDashboard'
 import axios from 'axios';
 import ICategoria from '../modules/ICategoria';
 import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react';
 import Api from '../../api/api';
-
+import categoriaStore from '../stores/categoriaStore';
+import {observer} from 'mobx-react-lite';
+import CategoriaEdicion from '../../features/categorias/dashboard/CategoriaEdicion';
+import CategoriaNueva from '../../features/categorias/dashboard/CategoriaNueva';
 
 const Categorias = () => {
 
-    const [categorias,setCategorias] = useState<ICategoria[]>([]);
-    const [obtuvoUsuarios, setobtuvoUser] = useState(false);
+
+    const categoriarefStore = useContext(categoriaStore)
+    const {categorias, loadCategorias, mostrarEdicion, mostrarNueva} = categoriarefStore;
 
     useEffect (() => {
-        // Cuándo usamos axios se debe de agregar Cors para que la app de React pueda acceder a la API.
-        Api.Categorias.list()
-        .then((categoriasFromApi) =>{ 
-            setCategorias(categoriasFromApi)
-            setobtuvoUser(true)         
-        });
+        loadCategorias()
     })
 
-    if(obtuvoUsuarios === false)
+    if(mostrarEdicion === true)
     {
         return(
         
+            <CategoriaEdicion></CategoriaEdicion>
+        )
+    }
 
-            <React.Fragment>  
-                <Segment>
-                <Dimmer active>
-                <Loader />
-                </Dimmer>
-
-                <Image src='/images/wireframe/short-paragraph.png' />
-                </Segment>
-            </React.Fragment>
+    if(mostrarNueva === true)
+    {
+        return(
+        
+            <CategoriaNueva></CategoriaNueva>
         )
     }
 
@@ -43,8 +41,10 @@ const Categorias = () => {
                 categorias={categorias} >
 
             </CategoriaDashboard>
+            
         </React.Fragment>        
-    )    
+    )
 }
 
-export default Categorias
+// se usa ek observer para indicarle a este componente que estará en eschuca del Store.
+export default observer(Categorias)

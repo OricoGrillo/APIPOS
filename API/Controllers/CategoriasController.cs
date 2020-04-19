@@ -46,8 +46,8 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        [Route("api/[controller]/{id}")]
-        public ActionResult UpdateCategoria([FromBody] Categoria Categoria, int id)
+        [Route("api/[controller]")]
+        public ActionResult UpdateCategoria([FromBody] Categoria Categoria)
         {
             Categoria = _service.Update(Categoria);
             return Ok(Categoria);        

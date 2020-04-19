@@ -1,12 +1,16 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {Table, Button} from 'semantic-ui-react';
 import ICategoria from '../../../app/modules/ICategoria';
+import categoriaStore from '../../../app/stores/categoriaStore'
 
 interface IProps{
     categorias: ICategoria[]
 }
 
 const CategoriaList:React.FC<IProps> = (props:IProps) => {
+
+    const {showEditWindow, deleteCategoria} = useContext(categoriaStore)
+
     return (
         
             <Table stackable>
@@ -24,8 +28,8 @@ const CategoriaList:React.FC<IProps> = (props:IProps) => {
                                 <Table.Cell>{categoria.nombre}</Table.Cell>
                                 
                                 <Table.Cell textAlign='right'>
-                                    <Button color='red'>Editar</Button>
-                                    <Button color='green'>Eliminar</Button>
+                                    <Button onClick = {() => showEditWindow(true, categoria)} color='red'>Editar</Button>
+                                    <Button onClick = {() => deleteCategoria(categoria.id)} color='green'>Eliminar</Button>
                                 </Table.Cell>
                             </Table.Row>
                         ))
